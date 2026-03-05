@@ -14,6 +14,9 @@ from subprocess import run as __shell__
 def lib():
     data = {}
     class PyPInstallLibType:
+        '''
+        this class's data is not in this object. this class's data is in function which return this class's object.
+        '''
         def __call__(self, libname, pw):
             if libname in data: assert data[libname][0] == hash(pw), "permission denied"
             else: data[libname] = (hash(pw), {})
@@ -22,6 +25,9 @@ def lib():
                 return value
             
             class PyPInstallLibExporter:
+                '''
+                this class's data is not in this object. this class's data is in function which return this class's object.
+                '''
                 def __getitem__(self, name):
                     def deco(value):
                         return addvar(name, value)
@@ -34,6 +40,9 @@ def lib():
         
         def __getitem__(self, libname):
             class PyPInstallModuleType:
+                '''
+                this class's data is not in this object. this class's data is in function which return this class's object.
+                '''
                 def __getitems__(self, member):
                     return data[libname][1][member]
             return PyPInstallModuleType()
