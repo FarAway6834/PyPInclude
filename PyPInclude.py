@@ -26,12 +26,17 @@ def __core__(package_paths, **kargv):
                 else: ret["cmclass"] = [__base_name__(package_path)]
     if "cmclass" in ret:
         cmclass = ret["cmclass"]
-        ret["cmclass"] = {}
         class install(__install__):
             def run(self):
                 __install__.run(self)
                 installed_dir = self.install_lib
                 for init_script in map(lambda x : __join_path__(installed_dir, x, "__PyPInclude__", "main.py"), filter(cmclass.__contains__, self.distribution.packages)): __shell__(["python", "-m", init_script])
+        class develop(__develop__):
+            def run(self):
+                __develop__.run(self)
+                installed_dir = self.egg_path
+                for init_script in map(lambda x : __join_path__(installed_dir, x, "__PyPInclude__", "main.py"), filter(cmclass.__contains__, self.distribution.packages)): __shell__(["python", "-m", init_script])
+        ret["cmclass"] = {"install" : install, "develop" : develop}
     return ret
 
 def setup(*, package_paths, **kargv):
