@@ -1,5 +1,3 @@
-assert 0, "ver 0.0.1 isn't supported"
-
 #code stinks.
 
 from setuptools import setup as __setup__
