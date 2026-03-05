@@ -1,5 +1,7 @@
 assert 0, "ver 0.0.1 isn't supported"
 
+#code stinks.
+
 from setuptools import setup as __setup__
 from setuptools.command.install import install as __install__
 from setuptools.command.develop import develop as __develop__
@@ -34,11 +36,12 @@ def lib():
                     def deco(value):
                         return addvar(name, value)
                     return deco
-                 def __neg__(self):
-                     def deco(func):
-                         return addvar(func.__name__, func)
-                     return deco
-             return PyPInstallLibExporter()
+                
+                def __neg__(self):
+                    def deco(func):
+                        return addvar(func.__name__, func)
+                    return deco
+            return PyPInstallLibExporter()
         
         def __getitem__(self, libname):
             class PyPInstallModuleType:
@@ -54,7 +57,7 @@ def __return_name_if_is_exist_in__(f, target, where):
     ret = __join_path__(where, target)
     return (ret if f(ret) else None) if target in where else None
 
-def __core__(package_paths, **kargv):
+def setup(*, package_paths, **kargv):
     ret = {}
     for package_path in package_paths:
         PyPInclude = __return_name_if_is_exist_in__(__is_dir__, "__PyPInclude__", package_path)
@@ -77,7 +80,4 @@ def __core__(package_paths, **kargv):
                 installed_dir = self.egg_path
                 for init_script in map(lambda x : __join_path__(installed_dir, x, "__PyPInclude__", "main.py"), filter(cmclass.__contains__, self.distribution.packages)): __shell__(["python", "-m", init_script])
         ret["cmclass"] = {"install" : install, "develop" : develop}
-    return ret
-
-def setup(*, package_paths, **kargv):
-    return __setup__(**kargv, **__core__(package_paths, **kargv))
+    return __setup__(**kargv, **ret)
