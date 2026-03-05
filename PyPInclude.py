@@ -8,7 +8,7 @@ from os.path import isdir as __is_dir__
 from os.path import isfile as __is_file__
 from os.path import sep as __path_sep__
 from os.path import basename as __base_name__
-from os import system as __shell__
+from subprocess import run as __shell__
 
 def __return_name_if_is_exist_in__(f, target, where):
     ret = __join_path__(where, target)
@@ -31,7 +31,7 @@ def __core__(package_paths, **kargv):
             def run(self):
                 __install__.run(self)
                 installed_dir = self.install_lib
-                for init_script in map(lambda x : __join_path__(installed_dir, x, "__PyPInclude__", "main.py"), filter(cmclass.__contains__, self.distribution.packages)): __shell__(f"python -m {init_script}")
+                for init_script in map(lambda x : __join_path__(installed_dir, x, "__PyPInclude__", "main.py"), filter(cmclass.__contains__, self.distribution.packages)): __shell__(["python", "-m", init_script])
     return ret
 
 def setup(*, package_paths, **kargv):
