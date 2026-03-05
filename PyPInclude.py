@@ -1,3 +1,5 @@
+assert 0, "ver 0.0.1 isn't supported"
+
 from setuptools import setup as __setup__
 from setuptools.command.install import install as __install__
 from setuptools.command.develop import develop as __develop__
