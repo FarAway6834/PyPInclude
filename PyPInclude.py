@@ -10,6 +10,35 @@ from os.path import sep as __path_sep__
 from os.path import basename as __base_name__
 from subprocess import run as __shell__
 
+@lambda f : f()
+def lib():
+    data = {}
+    class PyPInstallLibType:
+        def __call__(self, libname, pw):
+            if libname in data: assert data[libname][0] == hash(pw), "permission denied"
+            else: data[libname] = (hash(pw), {})
+            def addvar(var, value):
+                data[libname][1][var] = value
+                return value
+            
+            class PyPInstallLibExporter:
+                def __getitem__(self, name):
+                    def deco(value):
+                        return addvar(name, value)
+                    return deco
+                 def __neg__(self):
+                     def deco(func):
+                         return addvar(func.__name__, func)
+                     return deco
+             return PyPInstallLibExporter()
+        
+        def __getitem__(self, libname):
+            class PyPInstallModuleType:
+                def __getitems__(self, member):
+                    return data[libname][1][member]
+            return PyPInstallModuleType()
+    return PyPInstallLibType()
+
 def __return_name_if_is_exist_in__(f, target, where):
     ret = __join_path__(where, target)
     return (ret if f(ret) else None) if target in where else None
