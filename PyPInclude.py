@@ -59,9 +59,14 @@ def setup(*, package_paths, **kargv):
     ret = {}
     for package_path in package_paths:
         PyPInclude = __return_name_if_is_exist_in__(__is_dir__, "__PyPInclude__", package_path)
-        if PyPInclude:
+        
+        if PyPInclude: # if PyPInclude isn't Falsy Value such as None (= if PyPInclude is exist in package_path as directory)
+            
+            # /* Step 1. check which is it possible to acess ret["package_data"] then add package_path key as value which "__PyPInclude__/*" */
             if "package_data" in ret: ret["package_data"][package_path] = ["__PyPInclude__/*"]
             else: ret["package_data"] = { package_path : ["__PyPInclude__/*"] }
+            
+            # /* Step 2. c            
             if __return_name_if_is_exist_in__(__is_file__, "__main__.py", PyPInclude):
                 if "cmdclass" in ret: ret["cmclass"].append(__base_name__(package_path))
                 else: ret["cmclass"] = [__base_name__(package_path)]
