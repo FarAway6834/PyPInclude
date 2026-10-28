@@ -65,6 +65,13 @@ def __return_name_if_is_exist_in__(f, target, where):
     ret = __join_path__(where, target)
     return (ret if f(ret) else None) if target in where else None
 
+def __dictsubdict_setattr__(dict, subdictname, attrvalue, *attrname): # func 4 readiblity... pythonic function is actually god-damb dictionarry manager and god-damb virtual machine overhead. even calling overhead is not c functional. but I used it. for readibility
+    p, q = subdictname in dict, bool(attrname) # why I use variable 2 use god-damb local memory? : for readibility
+    if p and q: dict[subdictname][attrname[0]] = attrvalue
+    elif q: dict[subdictname] = { attrname[0] : attrvalue }
+    elif p: dict[subdictname].append(attrvalue)
+    else: dict[subdictname] = [attrvalue]
+
 def setup(*, package_paths, **kargv):
     ret = {}
     for package_path in package_paths:
@@ -74,14 +81,12 @@ def setup(*, package_paths, **kargv):
         if PyPInclude: # if PyPInclude isn't Falsy Value such as None (= if PyPInclude is exist in package_path as directory)
             
             # /* Step 1.1. check which is it possible to acess ret["package_data"] then add package_path key as value which "__PyPInclude__/*" */
-            if "package_data" in ret: ret["package_data"][package_path] = ["__PyPInclude__/*"]
-            else: ret["package_data"] = { package_path : ["__PyPInclude__/*"] }
+            __dictsubdict_setattr__(ret, "packages_data", ["__PyPInclude__/*"], package_path)
             
             # /* Step 1.2. add package name which __PyPIncluder__/ __main__.py is exist */            
             if __return_name_if_is_exist_in__(__is_file__, "__main__.py", PyPInclude):
                 # /* see. it's same repartory as step 1 */
-                if "cmdclass" in ret: ret["cmclass"].append(__base_name__(package_path))
-                else: ret["cmclass"] = [__base_name__(package_path)]
+                __dictsubdict_setattr__(ret, "cmclass", __base_name__(package_path))
 
     # /* Step 2. update cmclass as can use in setup function by defining cmclass which install class and develop class and use them */
     if "cmclass" in ret:
@@ -111,7 +116,9 @@ def setup(*, package_paths, **kargv):
             def run(self):
                 __develop__.run(self)
                 _ = map(
-                    self.egg_path,
+                    get_confscript_path_getter(
+                        self.egg_path
+                    ),
                     filter(
                         is_in_cmclass,
                         self.distribution.packages
