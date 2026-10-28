@@ -63,7 +63,7 @@ cannot make private in python. function.__code__.co_varnames and function.__clos
 
 def __return_name_if_is_exist_in__(f, target, where):
     ret = __join_path__(where, target)
-    return (ret if f(ret) else None) if target in where else None
+    return (ret if f(ret) else None) if target in __ls__(where) else None
 
 def __dictsubdict_setattr__(dict, subdictname, attrvalue, *attrname): # func 4 readiblity... pythonic function is actually god-damb dictionarry manager and god-damb virtual machine overhead. even calling overhead is not c functional. but I used it. for readibility
     p, q = subdictname in dict, bool(attrname) # why I use variable 2 use god-damb local memory? : for readibility
