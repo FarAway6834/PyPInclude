@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="PyPInclude",
-    version="0.0.2",
+    version="0.0.3",
     description = "PyPInclude (PyPI includer)",
     py_modules=["PyPInclude"],
     install_requires=["setuptools", "privathon"],
